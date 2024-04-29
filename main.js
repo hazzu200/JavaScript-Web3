@@ -6,21 +6,20 @@ const crypto = require('crypto');
 const fs = require('fs');
 
 const rl = readline.createInterface({ input, output });
-var password = "miku";
 var userAccount = '';
-var userBalance;
 var password;
-var noOfAccountsToBeCreated;
 
-console.log("[+] Etherium Miku Wallet");
+
 
 class FirstPage {
 
     showFirstPage() {
+        console.clear()
+        console.log("[+] Etherium Miku Wallet");
         rl.question("    Enter Wallet Password  \n    Type C to create new wallet: ", (firstpageanswer) => {
             if (!firstpageanswer) {
-                console.log('    Please Write Something');
-                rl.close();
+                firstPageShow.showFirstPage();
+
             }
             if (firstpageanswer == "C" || firstpageanswer == "c") {
                 this.showCreateWallet();
@@ -32,43 +31,84 @@ class FirstPage {
             if (confirmation == "Y" || confirmation == "y") {
                 newUser.createNewUserGUI();
             } else if (confirmation == "n" || confirmation == "N") {
-                this.showFirstPage
+                this.showFirstPage()
             }
 
         })
     }
 
 }
-class NewUser{
+class NewUser {
     createNewUserGUI() {
         rl.question("    No.of accounts should be created in wallet (can be 0): ", (noOfAccounts) => {
             if (!noOfAccounts) {
-                console.log("    Please enter the number of accounts to be created");
+                this.createNewUserGUI();
             } else if (noOfAccounts) {
                 this.createUser(noOfAccounts);
             }
         })
     }
-    createUser(noOfAccounts) {
-        crypto.randomBytes(32, (err, buffer)=>{
-            if (err){
-                console.log(err);
-                return;
-            }
 
-        const userID = buffer.toString('hex');
-        const walletDetails = web3.eth.accounts.wallet.create(noOfAccounts);
-        fs.writeFile('userID.txt', userID , (error) => {
+    createUserIDFile(user) {
+        fs.writeFile('userID.txt', user, (error) => {
             if (error) {
                 console.log(error);
             }
         })
-        return;
+    }
+    savingAccounts(data) {
+
+        for (let index = 0; index <= (data.length) - 1; index++) {
+
+            var dataToWrite = " " + data[index]['privateKey']
+            fs.writeFile('accounts.txt', '', () => { })
+            fs.appendFile('accounts.txt', dataToWrite, (err) => {
+                if (err) {
+                    console.log(err);
+
+                }
+            })
+
+        }
+        dataToWrite == null
+    }
+    createUser(noOfAccounts) {
+        crypto.randomBytes(32, (err, buffer) => {
+            if (err) {
+                console.log(err);
+            }
+            const walletDetails = web3.eth.accounts.wallet.create(noOfAccounts);
+            userAccount = buffer.toString('hex');
+
+            this.createUserIDFile(userAccount);
+            if (noOfAccounts == 0) {
+                fs.writeFile('accounts.txt', "", () => { })
+            } else {
+                this.savingAccounts(walletDetails);
+            }
+
+            mainMenu.mainMenuGUI();
         })
+
+
+    }
+}
+class MainMenu {
+    mainMenuGUI() {
+        console.clear();
+        console.log(`[+] Welcome user: ${userAccount} `);
+        console.log("\n [+] KeyBinds: C(Create new account)  S(Etherium Transaction)  L(Look Up Transaction) A(Check Account Details) <(To LogOut) ")
+        rl.question('\n  Key: ', (key)=>{
+            this.keyBindChecker(key)
+        })
+    
+    }
+    keyBindChecker(keyPressed){
+
     }
 }
 
-
 var firstPageShow = new FirstPage();
 var newUser = new NewUser();
+var mainMenu = new MainMenu();
 firstPageShow.showFirstPage(); 
