@@ -7,10 +7,6 @@ const fs = require('fs');
 
 const rl = readline.createInterface({ input, output });
 var userAccount = '';
-var password;
-
-
-
 class FirstPage {
 
     showFirstPage() {
@@ -97,14 +93,39 @@ class MainMenu {
     mainMenuGUI() {
         console.clear();
         console.log(`[+] Welcome user: ${userAccount} `);
-        console.log("\n [+] KeyBinds: C(Create new account)  S(Etherium Transaction)  L(Look Up Transaction) A(Check Account Details) <(To LogOut) ")
+        console.log("\n [+] KeyBinds: C(Create new account)  S(Etherium Transaction)  L(Look Up Transaction) \n  A(Check Account Related Details) <(To LogOut) </(To Close program) ")
         rl.question('\n  Key: ', (key)=>{
             this.keyBindChecker(key)
         })
     
     }
     keyBindChecker(keyPressed){
+        if (keyPressed == "<") {
+            this.logOut();
+        }
+        if (keyPressed == "</"){
+            this.closeProgram()
+        }
+    }
+    createNewAccount(){
 
+    }
+    etheriumTransaction(){
+
+    }
+    lookUpTransaction(){
+
+    }
+    checkAccountDetails(){
+
+    }
+    logOut(){
+    firstPageShow.showFirstPage();
+
+    }
+    closeProgram(){
+        console.clear()
+        rl.close();
     }
 }
 
